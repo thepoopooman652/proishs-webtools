@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDN Information</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 2em;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 2em auto;
+            padding: 2em;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1,
+        h2 {
+            color: #1a1a1a;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5em;
+        }
+        
+        code,
+        pre {
+            background-color: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: "Courier New", Courier, monospace;
+        }
+        
+        pre {
+            padding: 1em;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .template {
+            border-left: 4px solid #007bff;
+            padding: 1em;
+            background-color: #f8f9fa;
+            margin-top: 1em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>CDN Information & Usage Guide</h1>
+
+        <h2>What is this?</h2>
+        <p>This is a simple Content Delivery Network (CDN) used to host and serve files. It has both a public directory for general access and a private, token-protected directory for restricted files.</p>
+
+        <h2>How to Request Files</h2>
+        <p>You can access files by constructing a URL that points to the <code>api.php</code> script.</p>
+
+        <h3>Public Files</h3>
+        <p>Files in the <code>/public/</code> directory can be accessed directly. The URL format is:</p>
+        <pre>api.php?file=[PATH/TO/YOUR/FILE.txt]</pre>
+        <p><strong>Example:</strong> To get a file named <code>image.png</code> located in <code>/public/images/</code>, you would use: <code>api.php?file=images/image.png</code></p>
+
+        <h3>Private Files</h3>
+        <p>Files in the <code>/private/</code> directory require an authentication token. You must append the <code>auth</code> parameter to the URL.</p>
+        <pre>api.php?file=[PATH/TO/YOUR/FILE.txt]&auth=[YOUR_AUTH_TOKEN]</pre>
+        <p><strong>Example:</strong> To get a file named <code>report.pdf</code> from the root of the private folder, you would use: <code>api.php?file=report.pdf&auth=PROISHCDN-API-KEY_main-S2t...</code></p>
+
+        <h2>Request a File Upload</h2>
+        <p>If you need a file to be uploaded to the CDN, please contact me via email or Discord using the template below. This helps ensure I have all the information I need.</p>
+
+        <div class="template">
+            <p><strong>Copy and paste this template into your message (Note: For access to the private CDN you must request an API key):</strong></p>
+            <pre>
+Subject: CDN File Upload Request
+
+Hello,
+
+Please upload the following file(s) to the CDN.
+
+**Destination:** [Public or Private ]]
+**Desired Path:** [e.g., images/icons/ or documents/manuals/]
+**Reason for Upload:** [Briefly explain why you need this file hosted]
+
+The file(s) are attached to this message.
+
+Thank you!
+            </pre>
+        </div>
+
+        <h2>Contact Info</h2>
+        <p><strong>Discord:</strong> <a href="https://discord.com/users/930473663080316948" target="_blank" rel="noopener noreferrer">proishnoob7910</a></p>
+        <p><strong>Email:</strong> <a href="mailto:thepoopooman69@proton.me">thepoopooman69@proton.me</a></p>
+    </div>
+</body>
+
+</html>
