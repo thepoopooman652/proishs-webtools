@@ -8,8 +8,6 @@ This is a repo for useful webtools made my ProishTheIdio
     - A lightweight PHP page for parsing and displaying uploaded JSON files in a readable way
 - YAML-Parse
     - A lightweight PHP page for parsing and displaying uploaded YAML files in a readable way
-- Private tools
-    - A few tools that are restriced to being used by myself
 - Misc Tools
     - Calculator
     - Image Search
