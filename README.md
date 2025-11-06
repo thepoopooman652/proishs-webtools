@@ -1,6 +1,6 @@
 # Proish Webtools Project Repository
 This is a repo for useful webtools made my ProishTheIdiot
-- This may be updated over time, but I might leave it as is, I made these mostly for myself to use when i dont have access to proper tools
+- This may be updated over time, but I might leave it as is, I made these mostly for myself to use when I dont have access to proper tools
 
 ## Tool List
 - CSV-Parse
