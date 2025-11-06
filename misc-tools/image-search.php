@@ -2,8 +2,8 @@
 
 // --- CONFIGURATION ---
 // Replace with your own API Key and Search Engine ID
-$apiKey = 'AIzaSyD1Xz5hIQRy3aVj8M1LsLthmCcL3VBdNSc';
-$cseId = '21e5943854bff4d6a';
+$apiKey = 'Old key was leaked and was rotated';
+$cseId = 'Old key was leaked and was rotated';
 // -------------------
 
 $query = '';
@@ -132,4 +132,5 @@ if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
         </div>
     <?php endif; ?>
 </body>
+
 </html>
