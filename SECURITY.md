@@ -5,7 +5,9 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.0.0   | Yes |
+| 1.1.0 | Yes |
+| 1.0.0   | Yes (Ends 1 Jan, 2026) |
+| Latest Release| Yes |
 | Source Code | Yes |
 | All beta/alpha versions | No|
 ## Reporting a Vulnerability
