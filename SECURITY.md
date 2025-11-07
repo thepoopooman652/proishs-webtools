@@ -6,7 +6,7 @@
 | Version | Supported          |
 | ------- | ------------------ |
 | 1.0.0   | Yes |
-
+| Source Code | Yes |
 ## Reporting a Vulnerability
 
 Contact info:
