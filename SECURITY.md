@@ -24,7 +24,7 @@ Details: [ENTER DETAILS HERE]
 Date found: [ENTER DATE HERE]
 Time found: [ENTER TIME HERE (include timezone)]
 Relevant section of code:
-[ENTHER CODE HERE (starting from 5 lines above and ending 5 lines below with the vulnerability highlighted)]
+[ENTHER CODE HERE (starting from 5 lines above and ending 5 lines below with the vulnerable section highlighted)]
 
 Reported by: [YOUR GITHUB USERNAME]
 Contact: [CONTACT INFO OF YOUR CHOICE (REQUIRED)]
