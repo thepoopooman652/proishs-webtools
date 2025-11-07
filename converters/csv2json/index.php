@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['convert'])) {
     $headers = [];
     $rowIndex = 0;
     
-    while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+    while (($row = fgetcsv($handle, 1000, ',', '"', '\\')) !== false) {
         if ($rowIndex === 0) {
             $headers = array_map('trim', $row);
             $rowIndex++;
