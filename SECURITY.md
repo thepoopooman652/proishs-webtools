@@ -10,9 +10,8 @@
 ## Reporting a Vulnerability
 
 Contact info:
-
-Email: thepoopooman69@proton.me
-Discord: proishnoob7910
+- Email: thepoopooman69@proton.me
+- Discord: proishnoob7910
 
 # Template
 When contacting me about a vulnerability (via email or discord) please use the following template.
