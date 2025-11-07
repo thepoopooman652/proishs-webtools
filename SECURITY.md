@@ -7,6 +7,7 @@
 | ------- | ------------------ |
 | 1.0.0   | Yes |
 | Source Code | Yes |
+| All beta/alpha versions | No|
 ## Reporting a Vulnerability
 
 Contact info:
