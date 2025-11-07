@@ -34,5 +34,5 @@ This is a repo for useful webtools made my ProishTheIdiot
  - Brainstorm more converters to create
  - Create a full release of all converters
 
-   ### AI Notice
-   I, ProishTheIdiot, do not consent to anything within this repo being used to train AI.
+## AI Notice
+I, ProishTheIdiot, do not consent to anything within this repo being used to train AI.
