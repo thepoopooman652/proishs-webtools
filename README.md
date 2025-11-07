@@ -28,3 +28,8 @@ This is a repo for useful webtools made my ProishTheIdiot
 - Converters
    - csv2json
    - json2csv
+
+ ## TODO
+ - Finish "md2txt" converter project
+ - Brainstorm more converters to create
+ - Create a full release of all converters
