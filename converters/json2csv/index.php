@@ -58,6 +58,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['convert'])) {
         exit;
     }
     
+    foreach ($data as $index => $item) {
+        if (!is_array($item)) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Invalid data at index ' . $index . ': all elements must be objects/arrays'
+            ]);
+            exit;
+        }
+    }
+    
     $headers = array_keys($data[0]);
     
     $csvData = [];
@@ -129,25 +139,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['convert'])) {
         
         .subtitle {
             color: #666;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             font-size: 14px;
-        }
-        
-        .nav-link {
-            display: inline-block;
-            color: #667eea;
-            text-decoration: none;
-            font-size: 14px;
-            margin-bottom: 20px;
-            padding: 8px 16px;
-            border: 1px solid #667eea;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-link:hover {
-            background: #667eea;
-            color: white;
         }
         
         .upload-area {
@@ -290,8 +283,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['convert'])) {
 </head>
 <body>
     <div class="container">
-        <a href="index.php" class="nav-link">← CSV to JSON</a>
-        
         <h1>JSON to CSV Converter</h1>
         <p class="subtitle">Upload your JSON file and convert it to CSV format instantly</p>
         
