@@ -25,3 +25,6 @@ This is a repo for useful webtools made my ProishTheIdiot
     - A basic, PHP file editor with syntax highlighting and the abilty to properly open things like images, videos, and audio
 - Proxy
     - A simple web proxy
+- Converters
+   - csv2json
+   - json2csv
