@@ -27,13 +27,13 @@ This is a repo for useful webtools made by ProishTheIdiot
     - A simple web proxy
 - Converters
    - csv2json
-    - Converts CSV files to JSON files
+        - Converts CSV files to JSON files
    - json2csv
-    - Converts JSON files to CSV files
+        - Converts JSON files to CSV files
    - json2xml
-    - Converts JSON files to XML files
+        - Converts JSON files to XML files
    - md2txt
-    - Converts Markdown files to plain text
+        - Converts Markdown files to plain text
 
  ## TODO
  - Finish "md2txt" converter project
