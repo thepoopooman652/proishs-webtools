@@ -36,8 +36,8 @@ This is a repo for useful webtools made by ProishTheIdiot
         - Converts Markdown files to plain text
 
  ## TODO
- - Finish "md2txt" converter project
- - Brainstorm more converters to create
+ - Finish "md2txt" converter project (DONE)
+ - Brainstorm more converters to create (mostly done)
  - Create a full release of all converters
 
 ## AI Notice
