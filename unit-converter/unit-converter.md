@@ -177,6 +177,3 @@ Minimal test checklist:
 
 ## Contact / contribution
 Contributions are welcome — open a pull request with unit additions or fixes. When adding units, include a brief source for conversion factors (official SI tables or authoritative references).
-
----
-Generated: unit-converter/index.php — single-file converter and a human-friendly README. Use the README as the authoritative list of supported units.
