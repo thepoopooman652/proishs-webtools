@@ -34,6 +34,8 @@ This is a repo for useful webtools made by ProishTheIdiot
         - Converts JSON files to XML files
    - md2txt
         - Converts Markdown files to plain text
+   - Unit Converter
+        - Takes a selected value for an input unit and shows the equal value for other units for the same measurement type
 
  ## TODO
  - Finish "md2txt" converter project (DONE)
