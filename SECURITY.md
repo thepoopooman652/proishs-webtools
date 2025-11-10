@@ -5,9 +5,12 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.1.1 | Yes |
-| 1.1.0 | Yes (Ends 5 Jan, 2026) |
-| 1.0.0   | Yes (Ends 1 Jan, 2026) |
+| 1.1.4 | Yes |
+| 1.1.3 | Yes |
+| 1.1.2 | No |
+| 1.1.1 | No |
+| 1.1.0 | No |
+| 1.0.0   | No |
 | Latest Release| Yes |
 | Source Code | Yes |
 | All beta/alpha versions | No|
