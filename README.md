@@ -37,11 +37,11 @@ This is a repo for useful webtools made by ProishTheIdiot
    - Unit Converter
         - Takes a selected value for an input unit and shows the equal value for other units for the same measurement type
 - File Viewers
-        - Generic file viewer and editor
-        - MD Previewer
-        - CSV Parse
-        - JSON Parse
-        - XML Parse (soon)
+   - Generic file viewer and editor
+   - MD Previewer
+   - CSV Parse
+   - JSON Parse
+   - XML Parse (soon)
 
  ## TODO
    - Create more webtools (duh)
