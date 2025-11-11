@@ -36,11 +36,16 @@ This is a repo for useful webtools made by ProishTheIdiot
         - Converts Markdown files to plain text
    - Unit Converter
         - Takes a selected value for an input unit and shows the equal value for other units for the same measurement type
+- File Viewers
+      - Generic file viewer and editor
+      - MD Previewer
+      - CSV Parse
+      - JSON Parse
+      - XML Parse (soon)
 
  ## TODO
- - Finish "md2txt" converter project (DONE)
- - Brainstorm more converters to create (mostly done)
- - Create a full release of all converters
- - Create a php based markdown viewer
+   - Create more webtools (duh)
+   - do sum other shi
+   - Create an XML preview tool
 ## AI Notice
 I, ProishTheIdiot, do not consent to anything within this repo being used to train AI.
