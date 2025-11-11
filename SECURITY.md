@@ -7,14 +7,14 @@
 | ------- | ------------------ |
 | Latest Release| Yes |
 | Source Code | Yes |
-| All beta/alpha versions | No|
+| All beta/alpha versions | No |
 ## Reporting a Vulnerability
 
 Contact info:
 - Email: thepoopooman69@proton.me
 - Discord: proishnoob7910
 
-# Template
+## Template
 When contacting me about a vulnerability (via email or discord) please use the following template.
 ```
 Hello,
