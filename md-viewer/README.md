@@ -235,17 +235,3 @@ Designed to handle large document collections efficiently:
 - **1000+ files**: ~150-300ms load time (after initial index)
 
 Initial index build takes 1-2 seconds for 1000 files, then uses cached index.
-
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit issues or pull requests.
-
-## License
-
-MIT License - feel free to use this for personal or commercial projects.
-
-## Credits
-
-Created for Zettelkasten users who need a simple, fast way to view and link to source documents.
-
