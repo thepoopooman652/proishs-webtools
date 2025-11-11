@@ -1,4 +1,4 @@
-# Zettelkasten Source Viewer
+# Source Viewer
 
 **vibe coded with Claude Sonnet 4.5, use on your own risk**
 
