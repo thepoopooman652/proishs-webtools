@@ -43,6 +43,9 @@ This is a repo for useful webtools made by ProishTheIdiot
 - Image Generators
    - Placeholder Image Generator
    - Color swatch generation with color-picker
+-Audio Tools
+   - Audio Editor Neo
+   - MP3 to WAV converter
 
  ## TODO
    - Create more webtools (duh)
