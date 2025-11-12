@@ -42,8 +42,9 @@ This is a repo for useful webtools made by ProishTheIdiot
    - CSV Parse
    - JSON Parse
    - XML Parse (soon)
-- Placeholder Image Generator 
-
+- Image Generators
+        - Placeholder Image Generator
+        - Color swatch generation with color-picker
 
  ## TODO
    - Create more webtools (duh)
