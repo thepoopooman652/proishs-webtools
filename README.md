@@ -42,6 +42,8 @@ This is a repo for useful webtools made by ProishTheIdiot
    - CSV Parse
    - JSON Parse
    - XML Parse (soon)
+- Placeholder Image Generator 
+
 
  ## TODO
    - Create more webtools (duh)
