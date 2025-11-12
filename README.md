@@ -19,8 +19,6 @@ This is a repo for useful webtools made by ProishTheIdiot
     - Wikipedia Search
 - CDN
     - ProishCDN is a drop in CDN that only consists of 1 file (2 if you include the info file) and works very well, info file contains documentation on usage
-- lib
-    - Contains some random librarys I made
 - Editor
     - A basic, PHP file editor with syntax highlighting and the abilty to properly open things like images, videos, and audio
 - Proxy
