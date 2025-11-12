@@ -43,8 +43,8 @@ This is a repo for useful webtools made by ProishTheIdiot
    - JSON Parse
    - XML Parse (soon)
 - Image Generators
-        - Placeholder Image Generator
-        - Color swatch generation with color-picker
+   - Placeholder Image Generator
+   - Color swatch generation with color-picker
 
  ## TODO
    - Create more webtools (duh)
