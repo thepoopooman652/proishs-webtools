@@ -1,0 +1,21 @@
+{
+  "name": "AudioLAB Neo by Azhar",
+  "short_name": "AudioLAB Neo",
+  "description": "A powerful in-browser audio editor by Azhar.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0a0e17",
+  "theme_color": "#131a29",
+  "icons": [
+    {
+      "src": "icons/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
