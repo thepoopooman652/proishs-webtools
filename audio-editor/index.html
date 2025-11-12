@@ -1,0 +1,2489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AudioLAB Neo by Azhar</title>
+
+    <!-- PWA Manifest Link -->
+    <link rel="manifest" href="manifest.json">
+    <!-- Theme color for the browser's UI -->
+    <meta name="theme-color" content="#131a29">
+    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
+    <style>
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-green: #00ff9d;
+            --neon-pink: #ff00ff;
+            --neon-purple: #bd00ff;
+            --dark-bg: #0a0e17;
+            --dark-card: #131a29;
+            --darker-card: #0e1421;
+            --text-primary: #e0e0e0;
+            --text-secondary: #8c8c8c;
+            --border-dark: #1c2436;
+            --success: #00d46e;
+            --warning: #ffcc00;
+            --error: #ff3366;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        @keyframes neon-pulse {
+            0%, 100% {
+                box-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(0, 243, 255, 0.7), 0 0 10px var(--neon-green);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
+            padding-bottom: 70px;
+            overflow-y: scroll;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.8rem;
+        }
+
+        /* Fixed Header Styles */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border-dark);
+            margin-bottom: 1rem;
+            flex-wrap: nowrap;
+            position: relative;
+        }
+        
+        .header-info {
+            display: flex;
+            align-items: center;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.8rem;
+            box-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
+            flex-shrink: 0;
+        }
+
+        .logo .material-icons {
+            color: white;
+            font-size: 22px;
+        }
+
+        .header-text {
+            flex-grow: 1;
+            min-width: 0;
+            margin-right: 0.8rem;
+            line-height: 1.2;
+        }
+
+        /* Fixed title styling - removed blurry gradient */
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neon-cyan);
+            margin-bottom: 0;
+            text-shadow: 0 0 8px rgba(0, 243, 255, 0.7);
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+
+        .file-name {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-family: 'Roboto Mono', monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-left: auto;
+        }
+
+        .theme-toggle {
+            background: var(--dark-card);
+            border: 1px solid var(--border-dark);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 8px rgba(0, 243, 255, 0.2);
+        }
+
+        .theme-toggle .material-icons {
+            font-size: 1.1rem;
+        }
+
+        /* Bottom Tabs */
+        .bottom-tabs {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--dark-card);
+            border-top: 1px solid var(--border-dark);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            z-index: 100;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .bottom-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.4rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .bottom-tab.active {
+            color: var(--neon-cyan);
+            background: rgba(0, 243, 255, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
+        }
+
+        .bottom-tab .material-icons {
+            font-size: 1.6rem;
+            margin-bottom: 0.2rem;
+            transition: all 0.3s;
+        }
+
+        .bottom-tab.active .material-icons {
+            transform: scale(1.15);
+            text-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        .bottom-tab-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .bottom-tab.active .bottom-tab-label {
+            font-weight: 600;
+            text-shadow: 0 0 4px rgba(0, 243, 255, 0.5);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Section Styles */
+        .section {
+            background: var(--dark-card);
+            border-radius: 10px;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid var(--border-dark);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            color: var(--neon-cyan);
+        }
+
+        .section-title .material-icons {
+            margin-right: 0.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header .section-title {
+            margin-bottom: 0;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--border-dark), transparent);
+            margin: 1.2rem 0;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--darker-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-dark);
+            border-radius: 7px;
+            padding: 0.6rem 1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .btn:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+            transform: scale(1.02);
+        }
+
+        .btn .material-icons {
+            margin-right: 0.4rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-green));
+            color: black;
+            border: none;
+            font-weight: 600;
+            animation: neon-pulse 3s infinite ease-in-out;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.6), 0 0 8px var(--neon-green);
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+        }
+
+        /* File Operations */
+        .file-operations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin-bottom: 1.2rem;
+        }
+
+        /* Track Playlist Styles - Made more compact */
+        .track-list-container {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        .track-item {
+            display: flex;
+            align-items: center;
+            background: var(--darker-card);
+            padding: 0.3rem 0.5rem;
+            border-radius: 5px;
+            margin-bottom: 0.2rem;
+            border: 1px solid var(--border-dark);
+            transition: background-color 0.2s, border-color 0.2s;
+            font-size: 0.75rem;
+        }
+        .track-item.dragging {
+            opacity: 0.5;
+            background: var(--neon-cyan);
+        }
+        .drag-handle {
+            cursor: grab;
+            color: var(--text-secondary);
+            margin-right: 0.4rem;
+            display: flex;
+            align-items: center;
+        }
+        .drag-handle .material-icons {
+            font-size: 0.9rem;
+        }
+        .track-name {
+            flex-grow: 1;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 0.5rem;
+        }
+        .track-duration {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--neon-green);
+            margin-right: 0.5rem;
+        }
+        .remove-track-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0.15rem;
+        }
+        .remove-track-btn:hover {
+            color: var(--error);
+        }
+        .remove-track-btn .material-icons {
+            font-size: 0.9rem;
+        }
+
+        /* Waveform Section */
+        .wave-section {
+            position: relative;
+        }
+
+        .transport-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .wave-container {
+            background: var(--darker-card);
+            border-radius: 7px;
+            border: 1px solid var(--border-dark);
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 0.8rem;
+            cursor: grab;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+        .wave-container:active {
+            cursor: grabbing;
+        }
+
+        #wave {
+            width: 100%;
+            height: 100%;
+        }
+
+        #playhead {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--neon-green);
+            box-shadow: 0 0 8px var(--neon-green);
+            display: none;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        #timeline-slider {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            -webkit-appearance: none;
+            height: 5px;
+            background: transparent;
+            outline: none;
+            margin: 0;
+            z-index: 11;
+            display: none;
+        }
+        #timeline-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--neon-green);
+            cursor: pointer;
+            box-shadow: 0 0 8px var(--neon-green);
+        }
+
+        /* Selection Control */
+        .selection-control {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding-bottom: 0.2rem;
+            font-size: 0.8rem;
+        }
+
+        .selection-control label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        
+        .selection-control input {
+            padding: 0.3rem;
+            width: 55px;
+            font-size: 0.8rem;
+        }
+        
+        .selection-control .btn {
+            padding: 0.3rem 0.5rem;
+            margin-left: 0.2rem;
+            font-size: 0.8rem;
+        }
+        
+        /* Controls Grid */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .control-group {
+            background: var(--darker-card);
+            border-radius: 7px;
+            padding: 1rem;
+            border: 1px solid var(--border-dark);
+        }
+
+        .control-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--neon-green);
+            display: flex;
+            align-items: center;
+        }
+
+        .control-title .material-icons {
+            margin-right: 0.4rem;
+            font-size: 1.1rem;
+        }
+
+        .param-control {
+            margin-bottom: 1rem;
+        }
+
+        .param-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.4rem;
+        }
+
+        .param-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .param-value {
+            font-size: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--neon-cyan);
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .slider-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--dark-card);
+            border: 1px solid var(--border-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--neon-cyan);
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .slider-btn:hover {
+            background: var(--neon-cyan);
+            color: black;
+        }
+
+        input[type="range"] {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            height: 4px;
+            background: var(--border-dark);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--neon-cyan);
+            cursor: pointer;
+            box-shadow: 0 0 8px var(--neon-cyan);
+            transition: box-shadow 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:active {
+            box-shadow: 0 0 12px var(--neon-cyan), 0 0 5px var(--neon-green);
+        }
+
+        /* Export Panel */
+        .export-panel {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .export-options {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.8rem;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto 1.2rem auto;
+        }
+        
+        .export-options .btn {
+            grid-column: 2 / 3;
+        }
+        
+        .export-options .format-select {
+            grid-column: 1 / 2;
+        }
+
+        .format-select {
+            background: var(--darker-card);
+            border: 1px solid var(--border-dark);
+            border-radius: 7px;
+            padding: 0.6rem;
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            width: 100%;
+            font-size: 0.85rem;
+        }
+
+        .tip-text {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.2rem 0;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-dark);
+            margin-top: 1.5rem;
+            line-height: 1.6;
+        }
+
+        /* Loading Overlay */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 14, 23, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+            color: #e0e0e0;
+        }
+
+        .spinner {
+            width: 45px;
+            height: 45px;
+            border: 3px solid var(--border-dark);
+            border-top: 3px solid var(--neon-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 0.8rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Status Message */
+        #status {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.7rem 1.2rem;
+            border-radius: 7px;
+            background: var(--dark-card);
+            border: 1px solid var(--border-dark);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+            display: none;
+            z-index: 1000;
+            text-align: center;
+            font-size: 0.8rem;
+            max-width: 90%;
+            width: auto;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 80%;
+            max-width: 400px;
+            background: var(--border-dark);
+            border-radius: 3px;
+            margin: 0.8rem 0;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: linear-gradient(to right, var(--neon-cyan), var(--neon-green));
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* Effects Tab Accordion */
+        .effects-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+        
+        .accordion-item {
+            border: 1px solid var(--border-dark);
+            border-radius: 7px;
+            overflow: hidden;
+            background: var(--darker-card);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .accordion-header {
+            background: var(--darker-card);
+            padding: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 4px rgba(0, 243, 255, 0.3);
+            font-size: 0.95rem;
+            transition: background-color 0.3s ease;
+        }
+        
+        .accordion-header:hover {
+            background-color: rgba(0, 243, 255, 0.08);
+        }
+
+        .accordion-header .material-icons {
+            transition: transform 0.3s;
+            color: var(--neon-cyan);
+            font-size: 1.2rem;
+        }
+        
+        .accordion-header.active .material-icons {
+            transform: rotate(180deg);
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .accordion-content.active {
+            max-height: 1000px;
+        }
+        
+        .accordion-content-inner {
+            padding: 0.8rem;
+            background: var(--dark-card);
+        }
+
+        /* MP3 Export Warning */
+        .mp3-warning {
+            background: var(--warning);
+            color: black;
+            padding: 0.4rem 0.8rem;
+            border-radius: 7px;
+            margin: 0.8rem auto;
+            max-width: 600px;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-header {
+                flex-wrap: wrap;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: flex-end;
+                margin-top: 0.8rem;
+            }
+            
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .file-operations, .transport-controls {
+                justify-content: center;
+            }
+                
+            .export-options {
+                grid-template-columns: 1fr;
+            }
+            .export-options .btn {
+                grid-column: 1 / 2;
+            }
+
+            .btn {
+                padding: 0.7rem 0.9rem;
+                font-size: 0.8rem;
+            }
+
+            .section {
+                padding: 0.9rem;
+            }
+
+            .wave-container {
+                height: 140px;
+            }
+
+            .selection-control {
+                flex-wrap: nowrap;
+                align-items: center;
+                overflow-x: auto;
+            }
+
+            .selection-control input {
+                width: auto;
+                min-width: 70px;
+            }
+            
+            /* Improved mobile bottom tabs */
+            .bottom-tabs {
+                padding: 0.4rem 0;
+            }
+            
+            .bottom-tab {
+                padding: 0.4rem 0.7rem;
+            }
+            
+            .bottom-tab .material-icons {
+                font-size: 1.4rem;
+            }
+            
+            .bottom-tab-label {
+                font-size: 0.6rem;
+            }
+            
+            /* Status message for mobile */
+            #status {
+                bottom: 70px;
+                font-size: 0.75rem;
+                padding: 0.6rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.6rem;
+            }
+            
+            .section {
+                padding: 0.7rem;
+            }
+            
+            .btn {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.75rem;
+            }
+            
+            .app-title {
+                font-size: 1.3rem;
+            }
+
+            .control-group {
+                padding: 0.9rem;
+            }
+
+            .param-control {
+                margin-bottom: 0.8rem;
+            }
+            
+            .selection-control {
+                gap: 0.2rem;
+            }
+            
+            .selection-control input {
+                width: 60px;
+                padding: 0.25rem;
+                font-size: 0.75rem;
+            }
+            
+            /* Further mobile optimizations for bottom tabs */
+            .bottom-tab {
+                padding: 0.3rem 0.5rem;
+            }
+            
+            .bottom-tab .material-icons {
+                font-size: 1.2rem;
+            }
+            
+            .bottom-tab-label {
+                font-size: 0.55rem;
+            }
+            
+            /* Status message for very small screens */
+            #status {
+                bottom: 65px;
+                font-size: 0.7rem;
+                padding: 0.5rem 0.8rem;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Scroll improvements */
+        .track-list-container {
+            scrollbar-width: thin;
+            scrollbar-color: var(--neon-cyan) var(--darker-card);
+        }
+        
+        .track-list-container::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .track-list-container::-webkit-scrollbar-track {
+            background: var(--darker-card);
+            border-radius: 2px;
+        }
+        
+        .track-list-container::-webkit-scrollbar-thumb {
+            background-color: var(--neon-cyan);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="mobile-optimized">
+    <div class="container">
+        <header class="app-header">
+            <div class="header-info">
+                <div class="logo">
+                    <span class="material-icons">graphic_eq</span>
+                </div>
+                <div class="header-text">
+                    <h1 class="app-title">AudioLAB Neo</h1>
+                    <p id="fileName" class="file-name">No file loaded</p>
+                </div>
+                <div class="header-actions">
+                    <button id="installBtn" class="btn hidden" style="border-color: var(--neon-purple); color: var(--neon-purple);">
+                        <span class="material-icons">download</span> Install App
+                    </button>
+                    <div class="theme-toggle" id="themeToggle">
+                        <span class="material-icons" id="themeIcon">dark_mode</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="tab-content active" id="editTab">
+            <div class="file-operations">
+                <input type="file" id="file" accept="audio/*" class="hidden" multiple />
+                <label for="file" class="btn btn-primary">
+                    <span class="material-icons">upload</span>
+                    Load Audio
+                </label>
+                <button id="reloadBtn" class="btn" style="border-color: var(--warning); color: var(--warning);">
+                    <span class="material-icons">refresh</span>
+                    Reload App
+                </button>
+            </div>
+
+            <div class="section hidden" id="playlistSection">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <span class="material-icons">queue_music</span>
+                        Track Playlist
+                    </h3>
+                    <label for="file" class="btn">
+                        <span class="material-icons">add</span>
+                        Add More Files
+                    </label>
+                </div>
+                <ul id="trackList" class="track-list-container"></ul>
+            </div>
+
+            <div class="section wave-section">
+                <div class="transport-controls" style="margin-top: 1rem;">
+                    <button id="play" class="btn btn-primary" style="flex: 1;">
+                        <span class="material-icons">play_arrow</span>
+                        Play / Pause
+                    </button>
+                    <button id="stop" class="btn" style="flex: 1;">
+                        <span class="material-icons">stop</span>
+                        Stop
+                    </button>
+                </div>
+
+                <div class="wave-container">
+                    <div id="timeline" class="timeline"></div>
+                    <canvas id="wave"></canvas>
+                    <div id="playhead"></div>
+                    <input type="range" id="timeline-slider" min="0" max="100" value="0" step="0.01">
+                </div>
+
+                <!-- More compact selection control -->
+                <div class="selection-control">
+                    <label>Selection:</label>
+                    <input type="text" id="selStart" value="00:00" class="btn" placeholder="mm:ss">
+                    <span>-</span>
+                    <input type="text" id="selEnd" value="00:00" class="btn" placeholder="mm:ss">
+                    <span id="selectionDuration" class="param-value">00:00</span>
+                    <button id="clearSel" class="btn btn-outline">Clear</button>
+                </div>
+            </div>
+
+            <div class="controls-grid">
+                <div class="section">
+                    <h3 class="section-title">
+                        <span class="material-icons">tune</span>
+                        Processing
+                    </h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.7rem;">
+                        <button id="joinBtn" class="btn" style="flex: 1;">
+                            <span class="material-icons">merge</span>
+                            Join Tracks
+                        </button>
+                        <button id="trimToSel" class="btn" style="flex: 1;">
+                            <span class="material-icons">content_cut</span>
+                            Trim
+                        </button>
+                        <button id="normalize" class="btn btn-primary" style="flex: 1;">
+                            <span class="material-icons">auto_graph</span>
+                            Normalize
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="effectsTab">
+            <div class="effects-accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header" data-accordion="tempoPitch">
+                        <span><span class="material-icons">speed</span> Tempo & Pitch</span>
+                        <span class="material-icons">expand_more</span>
+                    </div>
+                    <div class="accordion-content" id="tempoPitchAccordion">
+                        <div class="accordion-content-inner">
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Tempo</span>
+                                    <span id="tempoVal" class="param-value">0%</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="tempoPct" data-step="-1">-</button>
+                                    <input id="tempoPct" type="range" value="0" min="-50" max="100">
+                                    <button class="slider-btn" data-target="tempoPct" data-step="1">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Pitch</span>
+                                    <span id="pitchVal" class="param-value">0.0 st</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="pitchSemi" data-step="-0.1">-</button>
+                                    <input id="pitchSemi" type="range" value="0" min="-12" max="12" step="0.1">
+                                    <button class="slider-btn" data-target="pitchSemi" data-step="0.1">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" data-accordion="equalizer">
+                        <span><span class="material-icons">equalizer</span> Equalizer</span>
+                        <span class="material-icons">expand_more</span>
+                    </div>
+                    <div class="accordion-content" id="equalizerAccordion">
+                        <div class="accordion-content-inner">
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Bass</span>
+                                    <span id="bassVal" class="param-value">0.0 dB</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="bass" data-step="-0.5">-</button>
+                                    <input id="bass" type="range" value="0" min="-12" max="12" step="0.5">
+                                    <button class="slider-btn" data-target="bass" data-step="0.5">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Treble</span>
+                                    <span id="trebleVal" class="param-value">0.0 dB</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="treble" data-step="-0.5">-</button>
+                                    <input id="treble" type="range" value="0" min="-12" max="12" step="0.5">
+                                    <button class="slider-btn" data-target="treble" data-step="0.5">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" data-accordion="ambience">
+                        <span><span class="material-icons">surround_sound</span> Ambience</span>
+                        <span class="material-icons">expand_more</span>
+                    </div>
+                    <div class="accordion-content" id="ambienceAccordion">
+                        <div class="accordion-content-inner">
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Reverb Mix</span>
+                                    <span id="reverbMixVal" class="param-value">0.00</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="reverbMix" data-step="-0.01">-</button>
+                                    <input id="reverbMix" type="range" value="0" min="0" max="1" step="0.01">
+                                    <button class="slider-btn" data-target="reverbMix" data-step="0.01">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Room Size</span>
+                                    <span id="roomSizeVal" class="param-value">1.2</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="roomSize" data-step="-0.1">-</button>
+                                    <input id="roomSize" type="range" value="1.2" min="0.1" max="5" step="0.1">
+                                    <button class="slider-btn" data-target="roomSize" data-step="0.1">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Echo Time (ms)</span>
+                                    <span id="echoTimeVal" class="param-value">300</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="echoTime" data-step="-10">-</button>
+                                    <input id="echoTime" type="range" value="300" min="1" max="2000" step="1">
+                                    <button class="slider-btn" data-target="echoTime" data-step="10">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Echo Feedback</span>
+                                    <span id="echoFeedbackVal" class="param-value">0.25</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="echoFeedback" data-step="-0.01">-</button>
+                                    <input id="echoFeedback" type="range" value="0.25" min="0" max="0.99" step="0.01">
+                                    <button class="slider-btn" data-target="echoFeedback" data-step="0.01">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Echo Mix</span>
+                                    <span id="echoMixVal" class="param-value">0.00</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="echoMix" data-step="-0.01">-</button>
+                                    <input id="echoMix" type="range" value="0" min="0" max="1" step="0.01">
+                                    <button class="slider-btn" data-target="echoMix" data-step="0.01">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" data-accordion="denoise">
+                        <span><span class="material-icons">hearing</span> Denoise</span>
+                        <span class="material-icons">expand_more</span>
+                    </div>
+                    <div class="accordion-content" id="denoiseAccordion">
+                        <div class="accordion-content-inner">
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Noise Gate</span>
+                                    <span id="denoiseGateVal" class="param-value">20 Hz</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="denoiseGate" data-step="-5">-</button>
+                                    <input id="denoiseGate" type="range" value="20" min="20" max="200" step="5">
+                                    <button class="slider-btn" data-target="denoiseGate" data-step="5">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Hum Reduction</span>
+                                    <span id="denoiseHumVal" class="param-value">0.1 Q</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="denoiseHum" data-step="-1">-</button>
+                                    <input id="denoiseHum" type="range" value="0.1" min="0.1" max="30" step="1">
+                                    <button class="slider-btn" data-target="denoiseHum" data-step="1">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Noise Threshold</span>
+                                    <span id="noiseThresholdVal" class="param-value">-60 dB</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="noiseThreshold" data-step="-1">-</button>
+                                    <input id="noiseThreshold" type="range" value="-60" min="-100" max="0" step="1">
+                                    <button class="slider-btn" data-target="noiseThreshold" data-step="1">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Reduction Amount</span>
+                                    <span id="noiseReductionVal" class="param-value">50%</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="noiseReduction" data-step="-5">-</button>
+                                    <input id='noiseReduction' type="range" value="50" min="0" max="100" step="5">
+                                    <button class="slider-btn" data-target="noiseReduction" data-step="5">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" data-accordion="dynamics">
+                        <span><span class="material-icons">volume_up</span> Dynamics</span>
+                        <span class="material-icons">expand_more</span>
+                    </div>
+                    <div class="accordion-content" id="dynamicsAccordion">
+                        <div class="accordion-content-inner">
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Master Volume</span>
+                                    <span id="outGainVal" class="param-value">0.0 dB</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="outGain" data-step="-0.5">-</button>
+                                    <input id="outGain" type="range" value="0" min="-24" max="24" step="0.5">
+                                    <button class="slider-btn" data-target="outGain" data-step="0.5">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="param-control">
+                                <div class="param-header">
+                                    <span class="param-label">Compression</span>
+                                    <span id="compThresholdVal" class="param-value">-24 dB</span>
+                                </div>
+                                <div class="slider-container">
+                                    <button class="slider-btn" data-target="compThreshold" data-step="-1">-</button>
+                                    <input id="compThreshold" type="range" value="-24" min="-60" max="0" step="1">
+                                    <button class="slider-btn" data-target="compThreshold" data-step="1">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="exportTab">
+            <div class="section export-panel">
+                <h3 class="section-title" style="justify-content: center;">
+                    <span class="material-icons">file_download</span>
+                    Export Audio
+                </h3>
+                
+                <div class="export-options">
+                    <select id="wavQuality" class="format-select">
+                        <option value="8">WAV - 8 bit (Lowest)</option>
+                        <option value="16" selected>WAV - 16 bit (Standard)</option>
+                        <option value="24">WAV - 24 bit (High Quality)</option>
+                        <option value="32">WAV - 32 bit Float (Max)</option>
+                    </select>
+                    <button id="exportWav" class="btn btn-primary">
+                        <span class="material-icons">download</span>
+                        Export WAV
+                    </button>
+                </div>
+
+                <div class="mp3-warning">
+                    <span class="material-icons" style="vertical-align: middle; margin-right: 5px;">schedule</span>
+                    MP3 encoding may take a while. For quick render, use WAV format.
+                </div>
+
+                <div class="export-options">
+                    <select id="mp3Quality" class="format-select">
+                        <option value="32">MP3 - 32 kbps (Very Low)</option>
+                        <option value="48">MP3 - 48 kbps (Low)</option>
+                        <option value="64">MP3 - 64 kbps (Low)</option>
+                        <option value="96">MP3 - 96 kbps (Low)</option>
+                        <option value="128" selected>MP3 - 128 kbps (Standard)</option>
+                        <option value="192">MP3 - 192 kbps (High)</option>
+                        <option value="256">MP3 - 256 kbps (Very High)</option>
+                        <option value="320">MP3 - 320 kbps (Max)</option>
+                    </select>
+                    <button id="exportMp3" class="btn btn-primary">
+                        <span class="material-icons">download</span>
+                        Export MP3
+                    </button>
+                </div>
+                
+                <div class="progress-container" id="exportProgress">
+                    <div class="progress-bar" id="exportProgressBar"></div>
+                </div>
+                <div id="exportStatusText" class="tip-text" style="margin-top: 0.5rem; height: 1.2em;"></div>
+                
+                <p class="tip-text" style="margin-top: 1rem; color: var(--warning);">
+                    <strong>Important:</strong> Please keep your screen on and the app open during the export process to prevent interruptions.
+                </p>
+                
+                <p class="tip-text" style="margin-top: 1rem;">
+                    Tip: 8-bit WAV is suitable for small file sizes. 16-bit WAV is great for CDs. 128-192 kbps MP3 is good for streaming. Use higher settings for archival or mastering.
+                </p>
+            </div>
+        </div>
+
+        <footer>
+            © AudioLAB Neo by Azhar <br>
+            Your audio never leaves your device.
+        </footer>
+    </div>
+
+    <div class="bottom-tabs">
+        <div class="bottom-tab active" data-tab="edit">
+            <span class="material-icons">edit</span>
+            <span class="bottom-tab-label">Editor</span>
+        </div>
+        <div class="bottom-tab" data-tab="effects">
+            <span class="material-icons">tune</span>
+            <span class="bottom-tab-label">Effects</span>
+        </div>
+        <div class="bottom-tab" data-tab="export">
+            <span class="material-icons">file_download</span>
+            <span class="bottom-tab-label">Export</span>
+        </div>
+    </div>
+
+    <div id="loading">
+        <div class="spinner"></div>
+        <div id="loadingText">Processing…</div>
+        <div class="progress-container" id="loadingProgress">
+            <div class="progress-bar" id="loadingProgressBar"></div>
+        </div>
+    </div>
+
+    <div id="status"></div>
+
+    <script>
+        'use strict';
+        // ====== Global State ======
+        let actx, masterGain, sourceNode, currentBuffer;
+        let trackBuffers = []; // Array of { buffer, name, id }
+        let originalFileName = '';
+        let viewStart = 0, viewEnd = 0, selection = null;
+        let playing = false, startWhen = 0, startOffset = 0, joinedTrackCount = 0;
+
+        // Effect nodes
+        let eqLow, eqHigh, comp, reverb, reverbGain, delayNode, delayGain, fb, outNode, hpDenoise, humNotch;
+        let noiseReductionNode, noiseProfile = null;
+
+        let roomSize = 1.2, echoTime = 0.3, echoFeedback = 0.25, echoMix = 0;
+        
+        // PWA Install Prompt
+        let deferredPrompt;
+
+        // DOM
+        const wave = document.getElementById('wave');
+        const tl   = document.getElementById('timeline');
+        const playhead = document.getElementById('playhead');
+        const timelineSlider = document.getElementById('timeline-slider');
+        const wctx = wave.getContext('2d');
+
+        let isProcessing = false;
+        let processingQueue = [];
+        let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        const MAX_FILE_SIZE_MB = isMobile ? 100 : 400; // Increased limits
+        const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024;
+
+        let currentTheme = 'dark';
+
+        // Performance settings
+        let waveDetail = 2; // 1=Low, 2=Medium, 3=High
+        let chunkSize = 10; // MB
+
+        // Web Worker for MP3 encoding
+        let mp3Worker = null;
+        let audioWorkers = [];
+
+        // Wake Lock API for keeping screen on during exports
+        let wakeLock = null;
+        
+        // --- IMPROVED COMPATIBILITY ---
+        // Determine the correct AudioContext class for the browser.
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+
+        async function requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    console.log('Screen Wake Lock is active');
+                }
+            } catch (err) {
+                // The Wake Lock API may be unavailable or disallowed by permissions policy.
+                // We will log this to the console but not show a user-facing error,
+                // as it's a non-essential feature.
+                console.log('Screen Wake Lock API is not available in this environment.');
+            }
+        }
+
+        function releaseWakeLock() {
+            if (wakeLock !== null) {
+                wakeLock.release();
+                wakeLock = null;
+                console.log('Screen Wake Lock released');
+            }
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('audioLabTheme');
+            if (savedTheme) { currentTheme = savedTheme; }
+            applyTheme();
+        }
+
+        function applyTheme() {
+            const root = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            if (currentTheme === 'dark') {
+                themeIcon.textContent = 'dark_mode';
+                root.style.setProperty('--neon-cyan', '#00f3ff'); root.style.setProperty('--neon-green', '#00ff9d');
+                root.style.setProperty('--dark-bg', '#0a0e17'); root.style.setProperty('--dark-card', '#131a29');
+                root.style.setProperty('--darker-card', '#0e1421'); root.style.setProperty('--text-primary', '#e0e0e0');
+                root.style.setProperty('--text-secondary', '#8c8c8c'); root.style.setProperty('--border-dark', '#1c2436');
+            } else {
+                themeIcon.textContent = 'light_mode';
+                root.style.setProperty('--neon-cyan', '#1a73e8'); root.style.setProperty('--neon-green', '#34a853');
+                root.style.setProperty('--dark-bg', '#f4f6f8'); root.style.setProperty('--dark-card', '#ffffff');
+                root.style.setProperty('--darker-card', '#f0f0f0'); root.style.setProperty('--text-primary', '#212121');
+                root.style.setProperty('--text-secondary', '#5f6368'); root.style.setProperty('--border-dark', '#e0e0e0');
+            }
+            localStorage.setItem('audioLabTheme', currentTheme);
+            if (currentBuffer) { drawWave(); }
+        }
+
+        function toggleTheme() {
+            currentTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+            applyTheme();
+        }
+
+        const dpr = () => window.devicePixelRatio || 1;
+
+        function ensureCtx(){
+            // If AudioContext is not supported at all, show an error and stop.
+            if (!AudioContext) {
+                showStatus('Web Audio API is not supported in this browser.', 'error');
+                return;
+            }
+            if(!actx){
+                try {
+                    // Use the determined AudioContext class
+                    actx = new AudioContext({ 
+                        sampleRate: 48000,
+                        latencyHint: isMobile ? 'interactive' : 'balanced'
+                    });
+                    masterGain = actx.createGain();
+                    masterGain.connect(actx.destination);
+                    buildGraph();
+                } catch (e) {
+                    showStatus('Audio context initialization failed: ' + e.message, 'error');
+                    console.error('AudioContext error:', e);
+                }
+            }
+            if (actx.state === 'suspended') { 
+                actx.resume().then(() => {
+                    console.log('Audio context resumed');
+                }).catch(e => {
+                    console.error('Failed to resume audio context:', e);
+                });
+            }
+        }
+
+        function buildGraph(){
+            eqLow = actx.createBiquadFilter(); eqLow.type='lowshelf'; eqLow.frequency.value=120;
+            eqHigh= actx.createBiquadFilter(); eqHigh.type='highshelf'; eqHigh.frequency.value=8000;
+            hpDenoise = actx.createBiquadFilter(); hpDenoise.type='highpass'; hpDenoise.frequency.value=20;
+            humNotch = actx.createBiquadFilter(); humNotch.type='notch'; humNotch.frequency.value=50; humNotch.Q.value=0.1;
+            noiseReductionNode = actx.createGain(); noiseReductionNode.gain.value = 1;
+            const conv = actx.createConvolver(); reverb = conv; reverbGain = actx.createGain(); reverbGain.gain.value=0; updateReverbIR(roomSize);
+            delayNode = actx.createDelay(2.0); delayNode.delayTime.value = echoTime;
+            fb = actx.createGain(); fb.gain.value = echoFeedback; delayNode.connect(fb).connect(delayNode); 
+            delayGain = actx.createGain(); delayGain.gain.value = echoMix;
+            comp = actx.createDynamicsCompressor(); comp.threshold.value=-18; comp.ratio.value=3; comp.attack.value=0.003; comp.release.value=0.25;
+            outNode = actx.createGain();
+            eqLow.connect(eqHigh).connect(hpDenoise).connect(humNotch).connect(noiseReductionNode);
+            const revBus = actx.createGain(), delBus = actx.createGain();
+            noiseReductionNode.connect(revBus); noiseReductionNode.connect(delBus); noiseReductionNode.connect(comp);
+            revBus.connect(reverb).connect(reverbGain).connect(comp);
+            delBus.connect(delayNode).connect(delayGain).connect(comp);
+            comp.connect(outNode).connect(masterGain);
+        }
+
+        function connectSource(buffer){
+            if(sourceNode){ try{ sourceNode.stop(); }catch(e){} sourceNode.disconnect(); }
+            sourceNode = actx.createBufferSource();
+            sourceNode.buffer = buffer;
+            sourceNode.connect(eqLow);
+            sourceNode.playbackRate.value = computePreviewPlaybackRate();
+        }
+
+        function updateReverbIR(size){
+            roomSize = size;
+            const len = Math.floor((actx?.sampleRate || 48000) * roomSize);
+            const ir = actx.createBuffer(2, len, actx.sampleRate);
+            for(let ch=0; ch<2; ch++){ const d = ir.getChannelData(ch); for(let i=0; i<len; i++){ const t = i/len; d[i] = (Math.random()*2-1) * Math.pow(1-t,3); } }
+            reverb.buffer = ir;
+        }
+
+        const computePreviewPlaybackRate = () => Math.max(0.1, 1 + (parseFloat(document.getElementById('tempoPct').value)||0)/100);
+
+        async function handleFiles(files){
+            if (isProcessing) { showStatus("Already processing, please wait...", "error"); return; }
+            isProcessing = true;
+            ensureCtx();
+            const initialTrackCount = trackBuffers.length;
+            
+            // Process files sequentially to avoid memory overload on mobile
+            for(const file of files){
+                if (file.size > MAX_FILE_SIZE) { 
+                    showStatus(`File ${file.name} is too large (max ${MAX_FILE_SIZE_MB}MB).`, 'error'); 
+                    continue; 
+                }
+                
+                showLoading(`Loading ${file.name}…`);
+                try{
+                    const ab = await file.arrayBuffer();
+                    const buf = await decodeAudioData(ab);
+                    trackBuffers.push({ buffer: buf, name: file.name, id: Date.now() + Math.random() });
+                    showStatus(`Added track: ${file.name}`, 'success');
+                }catch(err){ 
+                    console.error(err); 
+                    showStatus(`Could not decode: ${file.name}`, 'error'); 
+                }
+                finally{ 
+                    hideLoading(); 
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                }
+            }
+            
+            if(trackBuffers.length > initialTrackCount && !currentBuffer){
+                const firstNewTrack = trackBuffers[initialTrackCount];
+                setBuffer(firstNewTrack.buffer, firstNewTrack.name);
+            }
+            renderTrackList();
+            isProcessing = false;
+        }
+
+        function decodeAudioData(arrayBuffer) {
+            return new Promise((resolve, reject) => {
+                if (!actx) {
+                    ensureCtx();
+                }
+                actx.decodeAudioData(arrayBuffer.slice(0))
+                    .then(resolve)
+                    .catch(e => {
+                        console.error('Error decoding audio data:', e);
+                        reject(e);
+                    });
+            });
+        }
+
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            const ms = Math.floor((seconds * 1000) % 1000);
+            return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}.${ms.toString().padStart(3, '0').substring(0,2)}`;
+        }
+
+        // NEW function for mm:ss format
+        function formatTimeMMSS(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        // Convert mm:ss to seconds
+        function parseTimeMMSS(timeStr) {
+            const parts = timeStr.split(':');
+            if (parts.length !== 2) return 0;
+            const minutes = parseInt(parts[0], 10) || 0;
+            const seconds = parseInt(parts[1], 10) || 0;
+            return minutes * 60 + seconds;
+        }
+
+        function renderTrackList() {
+            const playlistSection = id('playlistSection');
+            const trackList = id('trackList');
+            trackList.innerHTML = '';
+
+            if (trackBuffers.length === 0) {
+                playlistSection.classList.add('hidden');
+                return;
+            }
+            playlistSection.classList.remove('hidden');
+
+            trackBuffers.forEach((track) => {
+                const item = document.createElement('li');
+                item.className = 'track-item';
+                item.draggable = true;
+                item.dataset.id = track.id;
+
+                item.innerHTML = `
+                    <span class="drag-handle"><i class="material-icons">drag_indicator</i></span>
+                    <span class="track-name">${track.name}</span>
+                    <span class="track-duration">${formatTime(track.buffer.duration)}</span>
+                    <button class="remove-track-btn" data-id="${track.id}"><i class="material-icons">close</i></button>
+                `;
+                trackList.appendChild(item);
+            });
+
+            addDragDropListeners();
+        }
+
+        function addDragDropListeners() {
+            const items = document.querySelectorAll('.track-item');
+            let dragSrcEl = null;
+
+            function handleDragStart(e) {
+                dragSrcEl = this;
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/html', this.innerHTML);
+                this.classList.add('dragging');
+            }
+
+            function handleDragEnd() {
+                this.classList.remove('dragging');
+            }
+
+            function handleDragOver(e) {
+                if (e.preventDefault) e.preventDefault();
+                return false;
+            }
+
+            function handleDrop(e) {
+                e.stopPropagation();
+                if (dragSrcEl !== this) {
+                    const srcId = dragSrcEl.dataset.id;
+                    const targetId = this.dataset.id;
+                    const srcIndex = trackBuffers.findIndex(t => t.id == srcId);
+                    const targetIndex = trackBuffers.findIndex(t => t.id == targetId);
+                    
+                    const [removed] = trackBuffers.splice(srcIndex, 1);
+                    trackBuffers.splice(targetIndex, 0, removed);
+
+                    renderTrackList();
+                    if (trackBuffers.length > 0 && currentBuffer.id !== trackBuffers[0].id) {
+                        const firstTrack = trackBuffers[0];
+                        setBuffer(firstTrack.buffer, firstTrack.name);
+                    }
+                }
+                return false;
+            }
+
+            items.forEach(item => {
+                item.addEventListener('dragstart', handleDragStart, false);
+                item.addEventListener('dragover', handleDragOver, false);
+                item.addEventListener('drop', handleDrop, false);
+                item.addEventListener('dragend', handleDragEnd, false);
+                item.querySelector('.remove-track-btn').addEventListener('click', (e) => {
+                    const idToRemove = e.currentTarget.dataset.id;
+                    const trackWasFirst = trackBuffers.length > 0 && trackBuffers[0].id == idToRemove;
+                    
+                    trackBuffers = trackBuffers.filter(t => t.id != idToRemove);
+                    
+                    renderTrackList();
+                    
+                    if (trackBuffers.length === 0) {
+                        setBuffer(null, 'No file loaded');
+                    } else if (trackWasFirst) {
+                        const newFirstTrack = trackBuffers[0];
+                        setBuffer(newFirstTrack.buffer, newFirstTrack.name);
+                    }
+                });
+            });
+        }
+
+        async function joinTracks(){
+            if (isProcessing) { showStatus("Already processing...", "error"); return; }
+            if(trackBuffers.length < 1){ showStatus('Add at least one track to join.', 'error'); return; }
+            showLoading('Joining tracks…');
+            isProcessing = true;
+            try{
+                const targetSampleRate = 48000;
+                const numChannels = Math.max(...trackBuffers.map(t => t.buffer.numberOfChannels));
+                
+                const resampledBuffers = [];
+                for (const track of trackBuffers) {
+                    if (track.buffer.sampleRate === targetSampleRate) {
+                        resampledBuffers.push(track.buffer);
+                    } else {
+                        const off = new OfflineAudioContext(
+                            track.buffer.numberOfChannels, 
+                            track.buffer.duration * targetSampleRate, 
+                            targetSampleRate
+                        );
+                        const src = off.createBufferSource(); 
+                        src.buffer = track.buffer; 
+                        src.connect(off.destination); 
+                        src.start();
+                        const resampled = await off.startRendering();
+                        resampledBuffers.push(resampled);
+                    }
+                }
+
+                const totalLength = resampledBuffers.reduce((sum, buf) => sum + buf.length, 0);
+                const joinedBuffer = actx.createBuffer(numChannels, totalLength, targetSampleRate);
+                
+                let offset = 0;
+                for(const buf of resampledBuffers){
+                    for(let i = 0; i < numChannels; i++) {
+                        joinedBuffer.getChannelData(i).set(buf.getChannelData(i % buf.numberOfChannels), offset);
+                    }
+                    offset += buf.length;
+                }
+                
+                joinedTrackCount = trackBuffers.length;
+                const newTrack = { buffer: joinedBuffer, name: `Joined Tracks (${joinedTrackCount})`, id: Date.now() };
+                trackBuffers = [newTrack]; 
+                setBuffer(newTrack.buffer, newTrack.name);
+                renderTrackList();
+                showStatus('Tracks joined successfully.', 'success');
+            }catch(err){ 
+                console.error(err); 
+                showStatus(`Join error: ${err.message}`, 'error'); 
+            }
+            finally{ 
+                hideLoading(); 
+                isProcessing = false; 
+                cleanupStep();
+            }
+        }
+
+        function setBuffer(buffer, name){
+            currentBuffer = buffer;
+            originalFileName = name;
+            id('fileName').textContent = name || 'No file loaded';
+            if(buffer) {
+                viewStart = 0; 
+                viewEnd = buffer.duration;
+                timelineSlider.max = buffer.duration;
+            } else {
+                viewStart = 0; viewEnd = 0;
+                wctx.clearRect(0,0,wave.width,wave.height);
+            }
+            selection = null;
+            resizeCanvases();
+            drawWave();
+            syncSelInputs();
+        }
+
+        function resizeCanvases(){
+            const w = Math.max(1, wave.clientWidth) * dpr();
+            const h = Math.max(1, wave.clientHeight) * dpr();
+            wave.width = w; wave.height = h;
+        }
+
+        function getCssVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+        function drawWave(){
+            if (!currentBuffer) return;
+            
+            requestAnimationFrame(() => {
+                const width = wave.width, height = wave.height;
+                wctx.clearRect(0,0,width,height);
+                wctx.fillStyle = getCssVar('--darker-card');
+                wctx.fillRect(0,0,width,height);
+                if(!currentBuffer){ return; }
+                
+                const mid = height/2;
+                const chData = currentBuffer.getChannelData(0);
+                const startSample = Math.floor(viewStart * currentBuffer.sampleRate);
+                const endSample = Math.min(chData.length, Math.floor(viewEnd * currentBuffer.sampleRate));
+                
+                let samplesPerPx;
+                switch(waveDetail) {
+                    case 1: samplesPerPx = Math.max(1, Math.floor((endSample - startSample) / width) * 4); break;
+                    case 3: samplesPerPx = Math.max(1, Math.floor((endSample - startSample) / width) / 4); break;
+                    default: samplesPerPx = Math.max(1, Math.floor((endSample - startSample) / width));
+                }
+                
+                const waveColor = getCssVar('--neon-cyan');
+                wctx.strokeStyle = waveColor;
+                wctx.lineWidth = 1.5; 
+                wctx.beginPath();
+                
+                if (isMobile || waveDetail === 1) {
+                    for(let x=0, i=startSample; x<width; x++, i+=samplesPerPx){
+                        if(i >= endSample) break;
+                        const v = chData[i] || 0;
+                        wctx.moveTo(x+0.5, mid); 
+                        wctx.lineTo(x+0.5, mid + v*mid);
+                    }
+                } else {
+                    for(let x=0, i=startSample; x<width; x++, i+=samplesPerPx){
+                        let min = 1, max = -1;
+                        for(let j=0; j<samplesPerPx && i+j<endSample; j++){ 
+                            const v = chData[i+j]; 
+                            if(v<min) min=v; 
+                            if(v>max) max=v; 
+                        }
+                        wctx.moveTo(x+0.5, mid + min*mid); 
+                        wctx.lineTo(x+0.5, mid + max*mid);
+                    }
+                }
+                
+                wctx.stroke();
+
+                if(selection){
+                    const sx = ((selection.start - viewStart)/(viewEnd - viewStart))*width;
+                    const ex = ((selection.end   - viewStart)/(viewEnd - viewStart))*width;
+                    wctx.fillStyle = waveColor + '33';
+                    wctx.fillRect(Math.max(0,sx),0, Math.max(0,ex-sx), height);
+                    wctx.fillStyle = waveColor + '80';
+                    wctx.fillRect(Math.max(0,sx)-1,0,2,height); 
+                    wctx.fillRect(Math.max(0,ex)-1,0,2,height);
+                }
+                
+                tl.innerHTML = '';
+                const secs = viewEnd - viewStart;
+                if(secs > 0) {
+                    const step = niceStep(secs);
+                    for(let t = Math.ceil(viewStart/step)*step; t<viewEnd; t+=step){
+                        const x = ((t - viewStart)/(viewEnd - viewStart))*100;
+                        const div = document.createElement('div');
+                        div.style.position='absolute'; div.style.left = x+'%';
+                        div.style.color = getCssVar('--text-secondary');
+                        div.style.fontSize = '0.7rem';
+                        // MODIFIED: Use new mm:ss format
+                        div.textContent = formatTimeMMSS(t);
+                        tl.appendChild(div);
+                    }
+                }
+            });
+        }
+
+        function niceStep(span){ const steps=[0.01, 0.02, 0.05, 0.1,0.2,0.5,1,2,5,10,20,30,60, 120, 300, 600]; for(const s of steps){ if(span/s < 12) return s; } return 1200; }
+
+        function play(seekTime = -1){ 
+            if(!currentBuffer) return; 
+            ensureCtx(); 
+            if(actx.state==='suspended') actx.resume(); 
+            if(playing){ pause(); return; }
+            
+            connectSource(currentBuffer); 
+            
+            let start, dur;
+            if (seekTime >= 0) {
+                start = seekTime;
+                dur = (selection ? selection.end : viewEnd) - start;
+            } else {
+                start = selection ? selection.start : viewStart;
+                dur = selection ? (selection.end - selection.start) : (viewEnd - viewStart);
+            }
+            
+            if (dur <= 0) return;
+
+            sourceNode.start(0, start, dur); 
+            startWhen = actx.currentTime; 
+            startOffset = start; 
+            playing = true; 
+            timelineSlider.style.display = 'block';
+            requestAnimationFrame(updatePlayhead);
+            sourceNode.onended = () => { 
+                playing=false; 
+                timelineSlider.style.display = 'none';
+            };
+        }
+
+        function pause(){ 
+            if(actx && actx.state==='running') actx.suspend().then(() => {
+                playing = false;
+            }).catch(e => {
+                console.error('Failed to suspend audio context:', e);
+                playing = false;
+            });
+        }
+
+        function stop(){ 
+            if(sourceNode){ 
+                try{ sourceNode.stop(); }catch(e){} 
+                sourceNode.disconnect();
+            } 
+            if(actx && actx.state!=='closed') {
+                actx.resume().then(() => actx.suspend()).catch(e => {
+                    console.error('Failed to stop audio:', e);
+                });
+            }
+            playing=false; 
+            timelineSlider.style.display = 'none'; 
+        }
+
+        function updatePlayhead(){
+            if(!playing || !currentBuffer){ playhead.style.display = 'none'; return; }
+            const elapsed = actx.currentTime - startWhen; 
+            const currentTime = startOffset + (elapsed * sourceNode.playbackRate.value);
+            
+            timelineSlider.value = currentTime;
+
+            if(currentTime>=viewStart && currentTime<=viewEnd){ 
+                const x = ((currentTime - viewStart)/(viewEnd - viewStart))*100; 
+                playhead.style.left = x+'%'; 
+                playhead.style.display = 'block'; 
+            } else { 
+                playhead.style.display = 'none'; 
+            }
+            if (playing) requestAnimationFrame(updatePlayhead);
+        }
+
+        function getState(){ 
+            return { 
+                eqLowGain:num('bass'), eqHighGain:num('treble'), reverbMix:num('reverbMix'), 
+                echoMix:num('echoMix'), roomSize:num('roomSize'), echoTime:num('echoTime'), 
+                echoFeedback:num('echoFeedback'), outGain:num('outGain'), tempoPct:num('tempoPct'), 
+                pitchSemi:num('pitchSemi'), denoiseGate:num('denoiseGate'), denoiseHum:num('denoiseHum'), 
+                noiseThreshold:num('noiseThreshold'), noiseReduction:num('noiseReduction'), compThreshold:num('compThreshold')
+            }; 
+        }
+
+        function applyState(s){ 
+            setVal('bass', s.eqLowGain); setVal('treble', s.eqHighGain); setVal('reverbMix', s.reverbMix); 
+            setVal('echoMix', s.echoMix); setVal('roomSize', s.roomSize || 1.2); setVal('echoTime', s.echoTime || 300); 
+            setVal('echoFeedback', s.echoFeedback || 0.25); setVal('outGain', s.outGain); setVal('tempoPct', s.tempoPct); 
+            setVal('pitchSemi', s.pitchSemi); setVal('denoiseGate', s.denoiseGate); setVal('denoiseHum', s.denoiseHum || 0.1); 
+            setVal('noiseThreshold', s.noiseThreshold || -60); setVal('noiseReduction', s.noiseReduction || 50); 
+            setVal('compThreshold', s.compThreshold || -24); 
+            updateFX(); updateValueDisplays(); 
+        }
+
+        function updateFX(){ 
+            ensureCtx(); 
+            if(!eqLow) return; 
+            const now = actx.currentTime;
+            eqLow.gain.setTargetAtTime(num('bass'), now, 0.01);
+            eqHigh.gain.setTargetAtTime(num('treble'), now, 0.01);
+            reverbGain.gain.setTargetAtTime(num('reverbMix'), now, 0.01);
+            delayGain.gain.setTargetAtTime(num('echoMix'), now, 0.01);
+            delayNode.delayTime.setTargetAtTime(num('echoTime') / 1000, now, 0.01);
+            fb.gain.setTargetAtTime(num('echoFeedback'), now, 0.01);
+            const newRoomSize = num('roomSize');
+            if (newRoomSize !== roomSize) { updateReverbIR(newRoomSize); }
+            outNode.gain.setTargetAtTime(dbToGain(num('outGain')), now, 0.01);
+            hpDenoise.frequency.setTargetAtTime(num('denoiseGate'), now, 0.01);
+            humNotch.Q.setTargetAtTime(num('denoiseHum'), now, 0.01);
+            const threshold = num('noiseThreshold');
+            const reductionAmount = num('noiseReduction') / 100;
+            noiseReductionNode.gain.setTargetAtTime(threshold > -60 ? 1 - reductionAmount : 1, now, 0.01);
+            comp.threshold.setTargetAtTime(num('compThreshold'), now, 0.01);
+            comp.ratio.setTargetAtTime(4, now, 0.01);
+            if(sourceNode){ sourceNode.playbackRate.setTargetAtTime(computePreviewPlaybackRate(), now, 0.01); } 
+        }
+
+        function normalize() {
+            if (isProcessing || !currentBuffer) return;
+            isProcessing = true;
+            showLoading('Normalizing...');
+            const originalBuffer = currentBuffer;
+            setTimeout(() => {
+                const offlineCtx = new OfflineAudioContext(originalBuffer.numberOfChannels, originalBuffer.length, originalBuffer.sampleRate);
+                const source = offlineCtx.createBufferSource();
+                source.buffer = originalBuffer;
+                let peak = 0;
+                for (let i = 0; i < originalBuffer.numberOfChannels; i++) {
+                    const channelData = originalBuffer.getChannelData(i);
+                    for (let j = 0; j < channelData.length; j += isMobile ? 100 : 10) {
+                        const absValue = Math.abs(channelData[j]);
+                        if (absValue > peak) peak = absValue;
+                    }
+                }
+                if (peak > 0) {
+                    const gainNode = offlineCtx.createGain();
+                    gainNode.gain.value = 1 / peak * 0.98;
+                    source.connect(gainNode);
+                    gainNode.connect(offlineCtx.destination);
+                } else {
+                    source.connect(offlineCtx.destination);
+                }
+                source.start(0);
+                offlineCtx.startRendering().then((renderedBuffer) => {
+                    setBuffer(renderedBuffer, originalFileName);
+                    showStatus('Normalized.', 'success');
+                }).catch((err) => {
+                    showStatus(`Normalization failed: ${err.message}`, 'error');
+                    console.error(err);
+                }).finally(() => {
+                    hideLoading(); isProcessing = false;
+                    cleanupStep();
+                });
+            }, 50);
+        }
+
+        async function renderOffline(){
+            if(!currentBuffer) return null;
+            showLoading('Rendering audio…');
+            try {
+                const sr = currentBuffer.sampleRate; 
+                const dur = selection ? (selection.end - selection.start) : currentBuffer.duration;
+                const off = new OfflineAudioContext(currentBuffer.numberOfChannels, Math.ceil(dur*sr), sr);
+                const src = off.createBufferSource(); src.buffer = currentBuffer;
+                const eqLow = off.createBiquadFilter(); eqLow.type='lowshelf'; eqLow.frequency.value=120; eqLow.gain.value=num('bass');
+                const eqHigh= off.createBiquadFilter(); eqHigh.type='highshelf'; eqHigh.frequency.value=8000; eqHigh.gain.value=num('treble');
+                const hpDenoise = off.createBiquadFilter(); hpDenoise.type='highpass'; hpDenoise.frequency.value=num('denoiseGate');
+                const humNotch = off.createBiquadFilter(); humNotch.type='notch'; humNotch.frequency.value=50; humNotch.Q.value=num('denoiseHum');
+                const noiseReductionNode = off.createGain(); noiseReductionNode.gain.value = 1;
+                const conv = off.createConvolver(), reverbGain = off.createGain(); reverbGain.gain.value=num('reverbMix');
+                const roomSizeValue = num('roomSize');
+                const len = Math.floor(sr * roomSizeValue);
+                const ir = off.createBuffer(2, len, sr);
+                for(let ch=0; ch<2; ch++){ const d=ir.getChannelData(ch); for(let i=0; i<len; i++){ const t=i/len; d[i]=(Math.random()*2-1)*Math.pow(1-t,3); } }
+                conv.buffer = ir;
+                const delayNode = off.createDelay(2.0); delayNode.delayTime.value = num('echoTime') / 1000;
+                const fb = off.createGain(); fb.gain.value = num('echoFeedback');
+                delayNode.connect(fb).connect(delayNode); 
+                const delayGain = off.createGain(); delayGain.gain.value = num('echoMix');
+                const comp = off.createDynamicsCompressor(); comp.threshold.value=num('compThreshold'); comp.ratio.value=4; comp.attack.value=0.003; comp.release.value=0.25;
+                const outNode = off.createGain(); outNode.gain.value = dbToGain(num('outGain'));
+                src.connect(eqLow).connect(eqHigh).connect(hpDenoise).connect(humNotch).connect(noiseReductionNode);
+                const revBus = off.createGain(), delBus = off.createGain();
+                noiseReductionNode.connect(revBus); noiseReductionNode.connect(delBus); noiseReductionNode.connect(comp);
+                revBus.connect(conv).connect(reverbGain).connect(comp);
+                delBus.connect(delayNode).connect(delayGain).connect(comp);
+                comp.connect(outNode).connect(off.destination);
+                src.start(0, selection?selection.start:0, dur);
+                const renderedBuffer = await off.startRendering();
+                return renderedBuffer;
+            } catch(err) { 
+                console.error(err); 
+                showStatus(`Render error: ${err.message}`, 'error'); 
+                return null; 
+            } finally { hideLoading(); }
+        }
+
+        async function trimToSelection(){ 
+            if (isProcessing) { showStatus("Already processing...", "error"); return; } 
+            if(!selection){ showStatus('Please select a region first.', 'error'); return; } 
+            isProcessing = true; 
+            await new Promise(resolve => setTimeout(resolve, 50));
+            const buf = await renderOffline();
+            if(buf){ 
+                setBuffer(buf, originalFileName); 
+                showStatus('Trimmed to selection.', 'success'); 
+            } 
+            isProcessing = false; 
+            cleanupStep();
+        }
+
+        function exportAudio(format){ 
+            return async () => { 
+                if (isProcessing) { showStatus("Already processing...", "error"); return; } 
+                if(!currentBuffer){ showStatus('No audio to export.', 'error'); return; } 
+                isProcessing = true; 
+                
+                if (format === 'mp3' && typeof lamejs === 'undefined') {
+                    showStatus('MP3 library failed to load. Check internet.', 'error');
+                    isProcessing = false; return;
+                }
+                
+                // Request wake lock to keep screen on during export
+                await requestWakeLock();
+                
+                await new Promise(resolve => setTimeout(resolve, 50));
+                const buf = await renderOffline(); 
+                if(!buf){ isProcessing = false; releaseWakeLock(); return; } 
+                
+                const baseName = originalFileName.startsWith('Joined') ? `Joined Tracks (${joinedTrackCount})` : (originalFileName.split('.').slice(0,-1).join('.')||'export');
+                const newFilename = `${baseName} - AudioLAB Neo by Azhar.${format}`;
+                let exportStartTime = Date.now();
+                
+                if(format==='wav'){ 
+                    showLoading('Encoding WAV… Please keep screen on.');
+                    setTimeout(() => {
+                        try {
+                            const bitDepth = parseInt(id('wavQuality').value, 10);
+                            const wavBuffer = encodeWav(buf, bitDepth);
+                            downloadBlob(new Blob([wavBuffer], {type:'audio/wav'}), newFilename); 
+                            showStatus('WAV exported.', 'success'); 
+                        } catch (error) {
+                            console.error('WAV export error:', error);
+                            showStatus('WAV export failed.', 'error');
+                        }
+                        isProcessing = false; hideLoading(); releaseWakeLock();
+                    }, 50);
+                } else if(format==='mp3'){ 
+                    const bitrate = parseInt(id('mp3Quality').value, 10); 
+                    showLoading(`Encoding MP3 at ${bitrate} kbps… Please keep screen on.`); 
+                    setTimeout(() => { 
+                        try{ 
+                            const mp3Data = []; 
+                            const encoder = new lamejs.Mp3Encoder(buf.numberOfChannels, buf.sampleRate, bitrate); 
+                            const block = 1152; 
+                            
+                            const process = (channelData, onProgress) => {
+                                return new Promise(resolve => {
+                                    const processChunk = (startIdx = 0) => {
+                                        const chunk = Array.isArray(channelData) ? 
+                                            [channelData[0].subarray(startIdx, Math.min(startIdx + block, channelData[0].length)), channelData[1].subarray(startIdx, Math.min(startIdx + block, channelData[1].length))] :
+                                            channelData.subarray(startIdx, Math.min(startIdx + block, channelData.length));
+                                        
+                                        if (chunk.length === 0 || (Array.isArray(chunk) && chunk[0].length === 0)) {
+                                            resolve(); return;
+                                        }
+
+                                        const mp3buf = Array.isArray(chunk) ? encoder.encodeBuffer(chunk[0], chunk[1]) : encoder.encodeBuffer(chunk);
+                                        if(mp3buf.length > 0) mp3Data.push(mp3buf);
+                                        
+                                        onProgress(startIdx / (Array.isArray(channelData) ? channelData[0].length : channelData.length));
+                                        
+                                        setTimeout(() => processChunk(startIdx + block), 0);
+                                    };
+                                    processChunk();
+                                });
+                            };
+
+                            const data = buf.numberOfChannels === 1 ?
+                                convertFloatToInt16(buf.getChannelData(0)) :
+                                [convertFloatToInt16(buf.getChannelData(0)), convertFloatToInt16(buf.getChannelData(1))];
+
+                            process(data, progress => {
+                                const percent = progress * 100;
+                                const elapsedTime = (Date.now() - exportStartTime) / 1000;
+                                let eta = '...';
+                                if (percent > 1) {
+                                    const totalTime = (elapsedTime / percent) * 100;
+                                    const remainingTime = Math.round(totalTime - elapsedTime);
+                                    eta = `${remainingTime}s left`;
+                                }
+                                updateProgress(percent, `Encoding MP3... (${eta})`);
+                            }).then(() => {
+                                const final = encoder.flush();
+                                if(final.length > 0) mp3Data.push(final);
+                                const mp3Blob = new Blob(mp3Data, {type:'audio/mp3'});
+                                downloadBlob(mp3Blob, newFilename); 
+                                showStatus('MP3 exported.', 'success');
+                                isProcessing = false; hideLoading(); releaseWakeLock();
+                            });
+                        } catch(err){ 
+                            console.error(err); showStatus(`MP3 error: ${err.message}`, 'error'); 
+                            isProcessing = false; hideLoading(); releaseWakeLock();
+                        }
+                    }, 50); 
+                }
+            }; 
+        }
+
+        function downloadBlob(blob, filename){ 
+            const url = URL.createObjectURL(blob); const a = document.createElement('a'); 
+            a.href = url; a.download = filename; document.body.appendChild(a); 
+            a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); 
+        }
+
+        // MODIFIED: Supports 8, 16, 24, 32-bit WAV export
+        function encodeWav(buf, bitDepth = 16) {
+            const numChannels = buf.numberOfChannels, sampleRate = buf.sampleRate;
+            const bytesPerSample = bitDepth / 8;
+            const blockAlign = numChannels * bytesPerSample;
+            const byteRate = sampleRate * blockAlign;
+            const dataSize = buf.length * blockAlign;
+            const buffer = new ArrayBuffer(44 + dataSize);
+            const view = new DataView(buffer);
+            let p = 0;
+            const writeString = s => { for (let i = 0; i < s.length; i++) view.setUint8(p++, s.charCodeAt(i)); };
+            
+            writeString('RIFF'); view.setUint32(p, 36 + dataSize, true); p += 4;
+            writeString('WAVE');
+            writeString('fmt '); view.setUint32(p, 16, true); p += 4;
+            view.setUint16(p, bitDepth === 32 ? 3 : 1, true); p += 2; // 3 for float, 1 for PCM
+            view.setUint16(p, numChannels, true); p += 2;
+            view.setUint32(p, sampleRate, true); p += 4;
+            view.setUint32(p, byteRate, true); p += 4;
+            view.setUint16(p, blockAlign, true); p += 2;
+            view.setUint16(p, bitDepth, true); p += 2;
+            writeString('data'); view.setUint32(p, dataSize, true); p += 4;
+
+            if (bitDepth === 32) {
+                for (let i = 0; i < buf.length; i++) {
+                    for (let ch = 0; ch < numChannels; ch++) {
+                        view.setFloat32(p, buf.getChannelData(ch)[i], true); p += 4;
+                    }
+                }
+            } else if (bitDepth === 24) {
+                for (let i = 0; i < buf.length; i++) {
+                    for (let ch = 0; ch < numChannels; ch++) {
+                        const sample = Math.max(-1, Math.min(1, buf.getChannelData(ch)[i]));
+                        const val = sample < 0 ? sample * 0x800000 : sample * 0x7FFFFF;
+                        view.setUint8(p++, val & 0xFF); view.setUint8(p++, (val >> 8) & 0xFF); view.setUint8(p++, (val >> 16) & 0xFF);
+                    }
+                }
+            } else if (bitDepth === 16) {
+                for (let i = 0; i < buf.length; i++) {
+                    for (let ch = 0; ch < numChannels; ch++) {
+                        const sample = Math.max(-1, Math.min(1, buf.getChannelData(ch)[i]));
+                        view.setInt16(p, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true); p += 2;
+                    }
+                }
+            } else if (bitDepth === 8) {
+                for (let i = 0; i < buf.length; i++) {
+                    for (let ch = 0; ch < numChannels; ch++) {
+                        const sample = Math.max(-1, Math.min(1, buf.getChannelData(ch)[i]));
+                        view.setUint8(p, Math.floor((sample + 1) * 127.5)); p += 1;
+                    }
+                }
+            }
+            return view.buffer;
+        }
+
+        const convertFloatToInt16 = a => { 
+            const b = new Int16Array(a.length); 
+            for(let i = 0; i < a.length; i++) { 
+                const s = Math.max(-1, Math.min(1, a[i])); 
+                b[i] = s < 0 ? s * 0x8000 : s * 0x7FFF; 
+            } 
+            return b; 
+        };
+
+        function reloadApp() {
+            if (confirm("Are you sure you want to reload the application? All unsaved work will be lost.")) {
+                window.location.reload();
+            }
+        }
+
+        function num(id){ return parseFloat(document.getElementById(id).value) || 0; }
+        function setVal(id, v){ const el = document.getElementById(id); if(el) el.value = v; }
+        function id(id){ return document.getElementById(id); }
+        const dbToGain = db => Math.pow(10, db/20);
+
+        function syncSelInputs(){ 
+            if(selection){ 
+                setVal('selStart', formatTimeMMSS(selection.start)); 
+                setVal('selEnd', formatTimeMMSS(selection.end)); 
+                id('selectionDuration').textContent = formatTimeMMSS(selection.end - selection.start);
+            } else { 
+                setVal('selStart','00:00'); setVal('selEnd','00:00'); 
+                id('selectionDuration').textContent = '00:00';
+            } 
+        }
+
+        function showLoading(text){ 
+            id('loadingText').textContent = text; id('loading').style.display = 'flex'; 
+            id('loadingProgress').style.display = 'none';
+            id('exportStatusText').textContent = '';
+        }
+
+        function hideLoading(){ 
+            id('loading').style.display = 'none'; id('loadingProgress').style.display = 'none';
+            id('exportProgress').style.display = 'none';
+            id('exportStatusText').textContent = '';
+        }
+        
+        function cleanupStep() {
+            // In JavaScript on the web, memory management is handled automatically by the browser's garbage collector.
+            // When audio data (buffers) is processed (e.g., trimmed, joined, normalized), the old data is
+            // replaced with the new data. The references to the old data are removed, and the garbage
+            // collector will then automatically free up that memory in the background.
+            // This function is called after major operations to signify the completion of a step,
+            // allowing the automatic cleanup process to reclaim memory and keep the experience smooth.
+            console.log("Operation complete. Unused memory will be garbage collected automatically.");
+        }
+
+        function updateProgress(percent, text = '') {
+            if (text) {
+                id('loadingText').textContent = text;
+                id('exportStatusText').textContent = text;
+            }
+            id('loadingProgress').style.display = 'block';
+            id('loadingProgressBar').style.width = percent + '%';
+            id('exportProgress').style.display = 'block';
+            id('exportProgressBar').style.width = percent + '%';
+        }
+
+        function showStatus(message, type = ''){ 
+            const s = id('status'); s.textContent = message; s.style.display = 'block'; 
+            s.style.background = type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--error)' : type === 'warning' ? 'var(--warning)' : 'var(--dark-card)'; 
+            s.style.color = (type === 'success' || type === 'error' || type === 'warning') ? '#000' : 'var(--text-primary)';
+            setTimeout(() => s.style.display = 'none', 3000); 
+        }
+
+        function updateValueDisplays(){ 
+            const map = { 
+                'tempoPct': {el:'tempoVal', unit:'%', dec:0}, 'pitchSemi': {el:'pitchVal', unit:' st', dec:1}, 
+                'bass': {el:'bassVal', unit:' dB', dec:1}, 'treble': {el:'trebleVal', unit:' dB', dec:1}, 
+                'reverbMix': {el:'reverbMixVal', unit:'', dec:2}, 'echoMix': {el:'echoMixVal', unit:'', dec:2}, 
+                'roomSize': {el:'roomSizeVal', unit:'', dec:1}, 'echoTime': {el:'echoTimeVal', unit:' ms', dec:0}, 
+                'echoFeedback': {el:'echoFeedbackVal', unit:'', dec:2}, 'outGain': {el:'outGainVal', unit:' dB', dec:1}, 
+                'denoiseGate': {el:'denoiseGateVal', unit:' Hz', dec:0}, 'denoiseHum': {el:'denoiseHumVal', unit:' Q', dec:1}, 
+                'noiseThreshold': {el:'noiseThresholdVal', unit:' dB', dec:0}, 'noiseReduction': {el:'noiseReductionVal', unit:'%', dec:0}, 
+                'compThreshold': {el:'compThresholdVal', unit:' dB', dec:0}
+            }; 
+            for(const [cid, d] of Object.entries(map)) { 
+                const c = id(cid), v = id(d.el); 
+                if(c && v) { 
+                    let displayValue = parseFloat(c.value).toFixed(d.dec); 
+                    v.textContent = `${displayValue}${d.unit}`; 
+                } 
+            } 
+        }
+
+        function setupUI(){
+            initTheme();
+            id('themeToggle').addEventListener('click', toggleTheme);
+            
+            // Tab switching with audio stop
+            document.querySelectorAll('.bottom-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Stop audio when switching to Export tab
+                    if (tab.dataset.tab === 'export' && playing) {
+                        stop();
+                    }
+                    
+                    document.querySelectorAll('.bottom-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById(tab.dataset.tab + 'Tab').classList.add('active');
+                });
+            });
+
+            id('file').addEventListener('change', e => { if(e.target.files.length > 0) handleFiles(e.target.files); });
+            
+            id('joinBtn').addEventListener('click', joinTracks);
+            id('play').addEventListener('click', () => play());
+            id('stop').addEventListener('click', stop);
+            id('reloadBtn').addEventListener('click', reloadApp);
+            
+            // Fix for + and - buttons in effects tab
+            document.querySelectorAll('.slider-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.dataset.target;
+                    const step = parseFloat(btn.dataset.step);
+                    const slider = id(target);
+                    if (slider) {
+                        let value = parseFloat(slider.value);
+                        value += step;
+                        value = Math.max(parseFloat(slider.min), Math.min(parseFloat(slider.max), value));
+                        slider.value = value;
+                        
+                        // Trigger input event to update effects
+                        slider.dispatchEvent(new Event('input'));
+                    }
+                });
+            });
+            
+            let dragMode = null, dragStart = 0, panStart = 0;
+            
+            const handleWaveStart = (clientX) => {
+                if(!currentBuffer) return;
+                const rect = wave.getBoundingClientRect();
+                const x = (clientX - rect.left) / rect.width;
+                const t = viewStart + x * (viewEnd - viewStart);
+                dragMode = 'new'; dragStart = t;
+            };
+
+            const handleWaveMove = (clientX) => {
+                if(!dragMode || !currentBuffer) return;
+                const rect = wave.getBoundingClientRect();
+                const x = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                const t = viewStart + x * (viewEnd - viewStart);
+                if(dragMode === 'new') {
+                    selection = { start: Math.min(dragStart, t), end: Math.max(dragStart, t) };
+                }
+                syncSelInputs(); drawWave();
+            };
+
+            wave.addEventListener('mousedown', e => { e.preventDefault(); handleWaveStart(e.clientX); });
+            wave.addEventListener('touchstart', e => { if (e.touches.length === 1) { e.preventDefault(); handleWaveStart(e.touches[0].clientX); } }, { passive: false });
+            window.addEventListener('mousemove', e => handleWaveMove(e.clientX));
+            window.addEventListener('touchmove', e => { if (e.touches.length === 1) { e.preventDefault(); handleWaveMove(e.touches[0].clientX); } }, { passive: false });
+            window.addEventListener('mouseup', () => { dragMode = null; });
+            window.addEventListener('touchend', () => { dragMode = null; });
+            
+            timelineSlider.addEventListener('input', e => { if (playing) { pause(); play(parseFloat(e.target.value)); } });
+            
+            id('selStart').addEventListener('change', e => { 
+                const v = parseTimeMMSS(e.target.value) || 0; if(!selection) selection = {start: 0, end: 0}; 
+                selection.start = Math.max(0, Math.min(v, (selection.end || 0) - 0.01)); syncSelInputs(); drawWave(); 
+            });
+            id('selEnd').addEventListener('change', e => { 
+                const v = parseTimeMMSS(e.target.value) || 0; if(!selection) selection = {start: 0, end: 0}; 
+                selection.end = Math.min(currentBuffer ? currentBuffer.duration : 0, Math.max(v, (selection.start || 0) + 0.01)); syncSelInputs(); drawWave(); 
+            });
+            id('clearSel').addEventListener('click', () => { selection = null; syncSelInputs(); drawWave(); });
+            
+            const fx = ['bass','treble','reverbMix','echoMix','roomSize','echoTime','echoFeedback','outGain','tempoPct','pitchSemi','denoiseGate','denoiseHum','noiseThreshold','noiseReduction','compThreshold'];
+            fx.forEach(c => { id(c)?.addEventListener('input', () => { updateFX(); updateValueDisplays(); }); });
+            
+            id('trimToSel').addEventListener('click', trimToSelection);
+            id('normalize').addEventListener('click', normalize);
+            id('exportWav').addEventListener('click', exportAudio('wav'));
+            id('exportMp3').addEventListener('click', exportAudio('mp3'));
+            
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    header.classList.toggle('active'); content.classList.toggle('active');
+                });
+            });
+            
+            const ro = new ResizeObserver(() => { resizeCanvases(); drawWave(); });
+            ro.observe(wave);
+            
+            updateValueDisplays();
+
+            // Install Button logic
+            const installBtn = document.getElementById('installBtn');
+            installBtn.addEventListener('click', async () => {
+                if (!deferredPrompt) { return; }
+                installBtn.classList.add('hidden');
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                deferredPrompt = null;
+            });
+        }
+
+        window.addEventListener('load', () => {
+            setupUI(); 
+            showStatus('AudioLAB Neo loaded. Add an audio file to begin.', 'success'); 
+        });
+
+        // --- PWA Service Worker Registration ---
+        // This script will register the service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+
+        // --- PWA Install Prompt Handling ---
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+            // Update UI to notify the user they can install the PWA
+            const installBtn = document.getElementById('installBtn');
+            if (installBtn) {
+                installBtn.classList.remove('hidden');
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            const installBtn = document.getElementById('installBtn');
+            if(installBtn) {
+                installBtn.classList.add('hidden');
+            }
+            deferredPrompt = null;
+            console.log('PWA was installed');
+            showStatus('App installed successfully!', 'success');
+        });
+    </script>
+</body>
+</html>
