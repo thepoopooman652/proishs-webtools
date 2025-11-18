@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Webtools</title>
+
+    <style>
+        body {
+            font-family: "Segoe UI", Roboto, sans-serif;
+            background: #0f1116;
+            color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        header {
+            text-align: center;
+            padding: 2rem 1rem 1rem;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: #00c896;
+        }
+        
+        h4 {
+            margin: 0.5rem 0 1.5rem;
+            color: #aaa;
+            font-weight: 400;
+        }
+        
+        #search {
+            width: 90%;
+            max-width: 600px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #1b1d24;
+            color: #fff;
+            outline: none;
+            box-shadow: 0 0 0 2px transparent;
+            transition: box-shadow 0.3s;
+        }
+        
+        #search:focus {
+            box-shadow: 0 0 0 2px #00c896;
+        }
+        
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 90%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+        
+        li {
+            background: #1b1d24;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.2s ease, background 0.2s ease;
+            padding: 1rem;
+            cursor: pointer;
+        }
+        
+        li:hover {
+            transform: translateY(-4px);
+            background: #232631;
+        }
+        
+        a {
+            color: #00c896;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            margin-top: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+            padding-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Webtools</h1>
+        <h4>Click a tool to open it</h4>
+        <input type="text" id="search" placeholder="Search for a game..." onkeyup="filterGames()" />
+    </header>
+
+    <ul id="gameList">
+        <li><a href=audio-editor/>Audio Editor</a>
+        </li>
+        <li><a href=cdn//>ProishCDN</a>
+        </li>
+        <li><a href=color-picker/>Color Picker</a>
+        </li>
+        <li><a href=converters/>Converters</a>
+        </li>
+        <li><a href=csv-parse/>CSV Parse</a>
+        </li>
+        <li><a href=json-parse/>JSON Parse</a>
+        </li>
+        <li><a href=yaml-parse/>YAML Parse</a>
+        </li>
+        <li><a href=editor/>File Editor</a>
+        </li>
+        <li><a href=md-preview//>Markdown Viewer (broken)</a>
+        </li>
+        <li><a href=misc-tools/>Misc Tools</a>
+        </li>
+        <li><a href=mp32wav/>Wav File Converter</a>
+        </li>
+        <li><a href=placeholder-img-gen/>Placeholder Image Generator</a>
+        </li>
+        <li><a href="proxy/proxy.php?url=https://INSERT URL HERE">Proxy</a></li>
+        <li><a href=unit-converter/>Unit Converter</a>
+        </li>
+        <li><a href=README.md>README file</a></li>
+    </ul>
+
+    <footer>© 2025 ProishTheIdiot <img src="https://grabify.link/IRHMP5"> </footer>
+
+    <script>
+        function filterGames() {
+            const searchValue = document.getElementById("search").value.toLowerCase();
+            const games = document.querySelectorAll("#gameList li");
+            games.forEach((li) => {
+                const text = li.textContent.toLowerCase();
+                li.style.display = text.includes(searchValue) ? "block" : "none";
+            });
+        }
+
+        document.querySelectorAll("#gameList a").forEach((link) => {
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                const url = link.href;
+
+                const width = screen.availWidth * 0.9;
+                const height = screen.availHeight * 0.9;
+                const left = (screen.availWidth - width) / 2;
+                const top = (screen.availHeight - height) / 2;
+
+                window.open(
+                    url,
+                    "_blank",
+                    `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=no`
+                );
+            });
+        });
+    </script>
+</body>
+
+</html>
