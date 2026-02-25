@@ -53,3 +53,7 @@ This is a repo for useful webtools made by ProishTheIdiot
    - Create an XML preview tool
 ## AI Notice
 I, ProishTheIdiot, do not consent to anything within this repo being used to train AI.
+
+## Copyright Notice
+This project and everything inside of it is licensed under the GNU General Public License v3
+Copyright 2026 ProishTheIdiot
