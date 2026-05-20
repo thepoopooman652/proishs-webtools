@@ -1,7 +1,7 @@
 # Proish Webtools Project Repository
 This is a repo for useful webtools made by ProishTheIdiot
 
-**USE THIS AT YOUR OWN RISK. SECURITY IS NOT GUARANTEED. PARTD OF THIS WERE VIBE CODED USING A COMBINATION OF CLAUDE SONNET 4.6, GOOGLE GEMINI, AND CHATGPT.**
+**USE THIS AT YOUR OWN RISK. SECURITY IS NOT GUARANTEED. PARTS OF THIS WERE VIBE CODED USING A COMBINATION OF CLAUDE SONNET 4.6, GOOGLE GEMINI, AND CHATGPT.**
 
 - This may be updated over time, but I might leave it as is, I made these mostly for myself to use when I dont have access to proper tools
 
